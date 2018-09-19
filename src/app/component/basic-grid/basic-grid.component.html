@@ -1,0 +1,54 @@
+
+  <div class="row col-md-12 header">
+    <div class="col-md-7 search-div" *ngIf="filterenabled">
+      <input class="searchTextBox" #searchTextBox type="text" placeholder="{{filterplaceholder}}" name="filtersearchbox"><button class="btn btn-logout material-icons grid-filter-btn" (click)="searchFilter(searchTextBox.value)">search</button>
+    </div>
+
+    <div class="col-md-5 page-size">
+      <div class="record-count-choice">
+        <span>Results per page:</span>
+        <span *ngFor="let recordcount of gridrecordcountoptions" class="pageSize" [class.active]="gridoptions.pagesize==recordcount" (click)="pageSizeChanged(recordcount)">{{recordcount}}</span>
+
+      </div>
+      <div class="record-count">{{gridoptions.totalresult}}&nbsp;&nbsp;entries</div>
+    </div>
+  </div>
+  
+  <div class="row col-md-12 table-section">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th *ngFor="let column of gridcolumns" class="width-big" scope="col" [style.width]="getStyle(column.width)">
+            {{column.displayname}}&nbsp;&nbsp;
+            <div *ngIf="column.sortenabled" class="column-sort-icon">
+              <i class="material-icons column-sort-icon-asc" *ngIf="!(gridoptions.sortcolumn.toLowerCase() == column.columnname.toLowerCase() && gridoptions.sortdirection.toLowerCase() == 'asc')" (click)="sort(column.columnname, 'asc')">keyboard_arrow_down</i>
+              <i class="material-icons column-sort-icon-desc" *ngIf="!(gridoptions.sortcolumn.toLowerCase() == column.columnname.toLowerCase() && gridoptions.sortdirection.toLowerCase() == 'desc')" (click)="sort(column.columnname, 'desc')">keyboard_arrow_down</i>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="griddata">
+        <tr *ngFor="let row of griddata | paginate: { itemsPerPage: gridoptions.pagesize, currentPage: gridoptions.pagenumber, totalItems: gridoptions.totalresult }">         
+          <td *ngFor="let column of gridcolumns">
+            <span *ngIf="column.isidentity" (click)="identityColumnClick(row[column.columnname])" [ngClass]="{'identity-column':column.isidentity}">{{row[column.columnname]}}</span>
+            <span *ngIf="!column.isidentity && row[column.columnname] != ''">{{row[column.columnname]}}</span>
+            <span *ngIf="!column.isidentity && (row[column.columnname] == null || row[column.columnname] == '' || row[column.columnname] == ' ')" class="row-cell-not-available">NA</span>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!griddata">
+        <tr><td colspan="4">No items found for search.</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="footer row col-md-12">
+    <div class="recordStatement col-md-4">
+      <p>Showing {{startOfrecords}} - {{endOfRecords}} of {{gridoptions.totalresult}} enteries</p>
+    </div>
+    <div class="pagination-div col-md-6">
+      <pagination-controls *ngIf="griddata && griddata.length > 0" (pageChange)="pageChanged($event)" maxSize="10" class="datagrid-pagination"></pagination-controls>
+    </div>
+    <div class="col-md-2"></div>
+  </div>

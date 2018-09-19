@@ -1,14 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
+import { BasicGridComponent } from './component/basic-grid/basic-grid.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BasicGridComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    NgxPaginationModule    
   ],
   providers: [],
   bootstrap: [AppComponent]
